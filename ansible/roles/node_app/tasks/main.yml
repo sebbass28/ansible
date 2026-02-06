@@ -1,0 +1,20 @@
+---
+- name: Update apt cache
+  apt:
+    update_cache: yes
+  become: yes
+
+- name: Ensure git is present
+  apt:
+    name: git
+    state: present
+  become: yes
+
+- name: Ensure node (and npm) are installed
+  apt:
+    name: nodejs
+    state: present
+  become: yes
+
+- name: Include deploy tasks
+  import_tasks: deploy.yml
