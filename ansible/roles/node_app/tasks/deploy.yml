@@ -1,16 +1,16 @@
 ---
 - name: Ensure app dir exists
   file:
-    path: /home/deploy/apps/myapp
+    path: /home/sebas/apps/myapp
     state: directory
-    owner: deploy
-    group: deploy
+    owner: sebas
+    group: sebas
     mode: "0755"
 
 - name: Checkout app code from repo
   git:
     repo: "https://github.com/sebbass28/ansible.git"
-    dest: /home/deploy/apps/myapp
+    dest: /home/sebas/apps/myapp
     version: "{{ git_ref | default('main') }}"
     force: yes
     update: yes
@@ -18,7 +18,7 @@
 
 - name: Install npm dependencies
   npm:
-    path: /home/deploy/apps/myapp/app # <--- CAMBIO: Añadido /app
+    path: /home/sebas/apps/myapp/app # <--- CAMBIO: Añadido /app
     production: yes
 
 - name: Copy systemd service file
