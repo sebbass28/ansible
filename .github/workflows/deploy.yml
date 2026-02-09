@@ -12,8 +12,17 @@ jobs:
 
       - name: Setup SSH Key
         run: |
-          # Crear el archivo key.pem donde Ansible lo espera
-          echo "${{ secrets.AWS_SSH_KEY }}" > ansible/key.pem
+          if [ -z "${{ secrets.AWS_SSH_KEY }}" ]; then
+            echo "::error::AWS_SSH_KEY secret is not set!"
+            exit 1
+          fi
+
+          # Crear el archivo key.pem donde Ansible lo espera, eliminando posibles CR de Windows
+          echo "${{ secrets.AWS_SSH_KEY }}" | tr -d '\r' > ansible/key.pem
+
+          # Asegurar que el archivo termina con un salto de línea (importante para libcrypto)
+          echo "" >> ansible/key.pem
+
           chmod 600 ansible/key.pem
 
           # Añadir la IP a known_hosts para evitar prompts interactivos
