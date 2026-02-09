@@ -9,12 +9,12 @@ all:
       # 🎯 IP de la máquina cliente (VM donde instalaremos la app)
       # EN EL EXAMEN: Cambia esto por la IP que te den
       # EJEMPLO: 192.168.1.100, 10.0.0.50, etc.
-      ansible_host: 213.0.87.11
+      ansible_host: 192.168.82.165
 
       # 👤 Usuario SSH para acceder a la máquina cliente
       # IMPORTANTE: Debe ser el mismo usuario al que le enviaste la llave pública
       # EN EL EXAMEN: Si el usuario es distinto (ej: ubuntu, ansible), cámbialo aquí
-      ansible_user: deploy
+      ansible_user: sebas
 
       # 🐍 Intérprete Python en la máquina cliente
       # Normalmente es /usr/bin/python3 en distribuciones modernas

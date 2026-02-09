@@ -11,7 +11,7 @@
   git:
     repo: "https://github.com/sebbass28/ansible.git"
     dest: /home/sebas/apps/myapp
-    version: "{{ git_ref | default('main') }}"
+    version: "{{ git_ref if git_ref else 'main' }}"
     force: yes
     update: yes
   become: no
