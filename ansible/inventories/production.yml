@@ -1,6 +1,25 @@
+# ═════════════════════════════════════════════════════════════════
+# ARCHIVO DE INVENTARIO PARA ANSIBLE
+# Este archivo define a QUIÉN y CÓMO Ansible ejecutará las tareas
+# ═════════════════════════════════════════════════════════════════
+
 all:
   hosts:
     web1:
-      ansible_host: localhost
-      ansible_connection: local
+      # 🎯 IP de la máquina cliente (VM donde instalaremos la app)
+      # EN EL EXAMEN: Cambia esto por la IP que te den
+      # EJEMPLO: 192.168.1.100, 10.0.0.50, etc.
+      ansible_host: 192.168.82.165
+
+      # 👤 Usuario SSH para acceder a la máquina cliente
+      # IMPORTANTE: Debe ser el mismo usuario al que le enviaste la llave pública
+      # EN EL EXAMEN: Si el usuario es distinto (ej: ubuntu, ansible), cámbialo aquí
+      ansible_user: deploy
+
+      # 🐍 Intérprete Python en la máquina cliente
+      # Normalmente es /usr/bin/python3 en distribuciones modernas
       ansible_python_interpreter: /usr/bin/python3
+
+      # ❌ IMPORTANTE: NO USES ansible_connection: local para máquinas remotas
+      # ansible_connection: local solo para localhost (tu PC)
+      # Si NO está este parámetro, Ansible usará SSH automáticamente ✅

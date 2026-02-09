@@ -3,6 +3,7 @@ name: CI/CD - Ansible Deploy
 on:
   push:
     branches: [main]
+  workflow_dispatch: # Permite ejecutar manualmente desde GitHub
 
 jobs:
   test:
@@ -31,24 +32,43 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Prepare SSH
+      - name: Setup SSH Key (Llave Privada)
+        # Esta sección prepara SSH para que GitHub pueda autenticarse en la VM del cliente
         run: |
+          # Crear la carpeta .ssh segura
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
-          chmod 644 ~/.ssh/known_hosts
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+          chmod 700 ~/.ssh
+
+          # 1. Guardar la LLAVE PRIVADA que subiste a Secrets
+          # Esta es la que le permite a GitHub "identificarse" ante la VM
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
+          # 2. Guardar known_hosts (si lo tienes como Secret, protege contra MITM)
+          # Si no lo tienes, comentamos esta línea o la dejamos en blanco
+          if [ ! -z "${{ secrets.SSH_KNOWN_HOSTS }}" ]; then
+            echo "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+            chmod 644 ~/.ssh/known_hosts
+          fi
+
+          # 3. Configurar SSH para aceptar conexiones
+          ssh-keyscan -H 192.168.82.165 >> ~/.ssh/known_hosts 2>/dev/null || true
 
       - name: Install Ansible
         run: |
           sudo apt update
-          sudo apt install -y python3-pip sshpass
+          sudo apt install -y python3-pip
           python3 -m pip install --upgrade pip
           pip3 install ansible
 
       - name: Run Ansible Playbook (deploy)
+        # Aquí Ansible usa la LLAVE PRIVADA que preparamos en SSH para conectarse a la VM
         env:
           GIT_REF: ${{ github.ref_name }}
+          # Evitar prompts SSH interactivos
+          ANSIBLE_HOST_KEY_CHECKING: False
         run: |
           cd ansible
-          ansible-playbook playbooks/deploy.yml -i inventories/production.yml --ssh-common-args '-o StrictHostKeyChecking=no'
+          ansible-playbook playbooks/deploy.yml \
+            -i inventories/production.yml \
+            -v
