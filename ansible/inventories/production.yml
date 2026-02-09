@@ -9,7 +9,7 @@ all:
       # 🎯 IP de la máquina cliente (VM donde instalaremos la app)
       # EN EL EXAMEN: Cambia esto por la IP que te den
       # EJEMPLO: 192.168.1.100, 10.0.0.50, etc.
-      ansible_host: 192.168.82.165
+      ansible_host: 98.90.194.113
 
       # 👤 Usuario SSH para acceder a la máquina cliente
       # IMPORTANTE: Debe ser el mismo usuario al que le enviaste la llave pública
