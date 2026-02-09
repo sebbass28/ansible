@@ -14,7 +14,7 @@ all:
       # 👤 Usuario SSH para acceder a la máquina cliente
       # IMPORTANTE: Debe ser el mismo usuario al que le enviaste la llave pública
       # EN EL EXAMEN: Si el usuario es distinto (ej: ubuntu, ansible), cámbialo aquí
-      ansible_user: sebas
+      ansible_user: ec2-user
 
       # 🐍 Intérprete Python en la máquina cliente
       # Normalmente es /usr/bin/python3 en distribuciones modernas
