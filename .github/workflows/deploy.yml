@@ -11,14 +11,18 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup SSH Key
+        env:
+          AWS_SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
         run: |
-          if [ -z "${{ secrets.AWS_SSH_KEY }}" ]; then
+          if [ -z "$AWS_SSH_KEY" ]; then
             echo "::error::AWS_SSH_KEY secret is not set!"
             exit 1
+          else
+            echo "Success: AWS_SSH_KEY found. Length: ${#AWS_SSH_KEY}"
           fi
 
           # Crear el archivo key.pem donde Ansible lo espera, eliminando posibles CR de Windows
-          echo "${{ secrets.AWS_SSH_KEY }}" | tr -d '\r' > ansible/key.pem
+          echo "$AWS_SSH_KEY" | tr -d '\r' > ansible/key.pem
 
           # Asegurar que el archivo termina con un salto de línea (importante para libcrypto)
           echo "" >> ansible/key.pem
