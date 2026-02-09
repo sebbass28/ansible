@@ -1,0 +1,35 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup SSH Key
+        run: |
+          # Crear el archivo key.pem donde Ansible lo espera
+          echo "${{ secrets.AWS_SSH_KEY }}" > ansible/key.pem
+          chmod 600 ansible/key.pem
+
+          # Añadir la IP a known_hosts para evitar prompts interactivos
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          ssh-keyscan -H 98.90.194.113 >> ~/.ssh/known_hosts
+
+      - name: Install Ansible
+        run: |
+          sudo apt update
+          sudo apt install -y python3-pip
+          pip3 install ansible
+
+      - name: Run Playbook
+        run: |
+          cd ansible
+          ansible-playbook -i inventories/production.yml playbooks/deploy.yml
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: False
