@@ -1,18 +1,40 @@
 ---
+- name: Install gnupg and dependencies
+  apt:
+    name:
+      - gnupg
+      - curl
+      - software-properties-common
+    state: present
+  become: yes
+
+- name: Add Docker GPG key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+  become: yes
+
+- name: Add Docker repository (Forced to Jammy for Mint Virginia)
+  apt_repository:
+    # Ahora que la clave está instalada, esto ya no dará error de firma
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu jammy stable"
+    state: present
+  become: yes
+
 - name: Update apt cache
   apt:
     update_cache: yes
   become: yes
 
-- name: Ensure git is present
+- name: Ensure git, nodejs, npm and docker are present
   apt:
-    name: git
-    state: present
-  become: yes
-
-- name: Ensure node (and npm) are installed
-  apt:
-    name: nodejs
+    name:
+      - git
+      - nodejs
+      - npm        # <--- ¡ESTE ES EL QUE FALTA!
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
     state: present
   become: yes
 
