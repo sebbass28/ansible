@@ -1,2 +1,6 @@
 repo/
 *.pem
+*.key
+keys/
+*.log
+*.retry

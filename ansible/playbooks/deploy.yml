@@ -3,6 +3,6 @@
   hosts: all
   become: no
   vars:
-    git_ref: "{{ lookup('env', 'GIT_REF') | default('main') }}"
+    git_ref: "{{ lookup('env', 'GIT_REF') | default('main', true) }}"
   roles:
     - node_app

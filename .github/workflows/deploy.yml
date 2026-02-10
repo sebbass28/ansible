@@ -31,7 +31,11 @@ jobs:
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
           
+<<<<<<< HEAD
           echo "Checking connectivity to 54.234.173.105..."
+=======
+          echo "Checking connectivity to 54.234.173.105:22..."
+>>>>>>> 21bf732 (Fix: Update Inventory IP and GitHub Workflow)
           if ! nc -zv -w 5 54.234.173.105 22; then
             echo "::error::Connection timed out. Check AWS Security Groups allow SSH from 0.0.0.0/0 (or this IP)."
             exit 1
