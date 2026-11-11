@@ -4,3 +4,11 @@ repo/
 keys/
 *.log
 *.retry
+
+# --- Seguridad: nunca versionar secretos ni artefactos ---
+.env*
+!.env.example
+!.env.*.example
+*.sqlite3
+node_modules/
+*.zip
